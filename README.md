@@ -1,5 +1,7 @@
 # whisper-keyboard
 
+Video demo: https://www.youtube.com/watch?v=n4ICxwsIeyE
+
 This tool allows you to simulate keyboard typing with voice commands on your computer. It uses OpenAI's Whisper speech-to-text model. 
 
 Keep a button pressed (by default: right ctrl) and speak. Your voice will be recoded locally. When the button is released, your command will be transcribed to text via Whisper and the text will be streamed to your keyboard.
