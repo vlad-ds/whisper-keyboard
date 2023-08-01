@@ -38,13 +38,18 @@ def on_release(key):
         recording = False
         print("Recording stopped.")
         
-        audio_data_np = np.concatenate(audio_data, axis=0)
+        try:
+            audio_data_np = np.concatenate(audio_data, axis=0)
+        except ValueError as e:
+            print(e)
+            return
+        
         audio_data_int16 = (audio_data_np * np.iinfo(np.int16).max).astype(np.int16)
         wavfile.write('recording.wav', sample_rate, audio_data_int16)
 
         transcript = apply_whisper('recording.wav', 'transcribe')
         processed_transcript = process_transcript(transcript)
-        
+        print(processed_transcript)
         keyboard_controller.type(processed_transcript)
 
 
