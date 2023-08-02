@@ -1,13 +1,18 @@
+import os
+
+from dotenv import load_dotenv
 import sounddevice as sd
 import numpy as np
-from pynput import keyboard
-from pynput.keyboard import Key, Controller as KeyboardController
+import openai
+from pynput.keyboard import Controller as KeyboardController, Key, Listener
 from scipy.io import wavfile
 
 from oa import apply_whisper
 from process import process_transcript
 
-RECORD_KEY = Key.ctrl_r
+load_dotenv()
+key_label = os.environ.get("RECORD_KEY", "ctrl_r")
+RECORD_KEY = Key[key_label]
 
 # This flag determines when to record
 recording = False
@@ -42,15 +47,20 @@ def on_release(key):
             audio_data_np = np.concatenate(audio_data, axis=0)
         except ValueError as e:
             print(e)
-            return
         
         audio_data_int16 = (audio_data_np * np.iinfo(np.int16).max).astype(np.int16)
         wavfile.write('recording.wav', sample_rate, audio_data_int16)
 
-        transcript = apply_whisper('recording.wav', 'transcribe')
-        processed_transcript = process_transcript(transcript)
-        print(processed_transcript)
-        keyboard_controller.type(processed_transcript)
+        transcript = None
+        try:
+            transcript = apply_whisper('recording.wav', 'transcribe')
+        except openai.error.InvalidRequestError as e:
+            print(e)
+        
+        if transcript:
+            processed_transcript = process_transcript(transcript)
+            print(processed_transcript)
+            keyboard_controller.type(processed_transcript)
 
 
 def callback(indata, frames, time, status):
@@ -58,10 +68,9 @@ def callback(indata, frames, time, status):
         print(status)
     if recording:
         audio_data.append(indata.copy())  # make sure to copy the indata
-        print(f'Recorded {frames} frames')
 
 
-with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
+with Listener(on_press=on_press, on_release=on_release) as listener:
     # This is the stream callback
     with sd.InputStream(callback=callback, channels=1, samplerate=sample_rate):
         # Just keep the script running
