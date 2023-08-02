@@ -4,7 +4,7 @@ Video demo: https://www.youtube.com/watch?v=VnFtVR72jM4&feature=youtu.be
 
 This tool allows you to simulate keyboard typing with voice commands on your computer. It uses OpenAI's Whisper speech-to-text model. 
 
-Keep a button pressed (by default: right ctrl) and speak. Your voice will be recoded locally. When the button is released, your command will be transcribed to text via Whisper and the text will be streamed to your keyboard.
+Keep a button pressed (by default: right ctrl) and speak. Your voice will be recoded locally. When the button is released, your command will be transcribed via Whisper and the text will be streamed to your keyboard.
 
 You can use your voice to write anywhere. 
 
@@ -18,9 +18,18 @@ Create a `.env` file in `bin/` with the following content:
 
 ```
 OPENAI_API_KEY=<your key>
+RECORD_KEY=ctrl_r
 ```
 
-Install requirements:
+Change RECORD_KEY to your preferred recording key. Note that Mac and Windows might have different key codes. You can use use the `find_key` script to find the code of the key you want to use. Just run:
+
+```shell
+python find_key.py
+```
+
+And press the key you want to use. The code will be printed in the terminal.
+
+Next, install requirements:
 
 ```shell
 pip install -r requirements.txt
@@ -34,7 +43,7 @@ python listener.py
 
 ## Additional requirements
 
-I've only tested this on Ubuntu. If you want to use it on Windows or Mac, you might have to install additional libraries. 
+Requirements differ depending on your OS.
 
 ### Ubuntu
 
@@ -44,17 +53,10 @@ You will need to install the portaudio library.
 sudo apt-get install portaudio19-dev 
 ```
 
-## Change the recording key
-
-The recording key is set to right ctrl by default. You can change it by changing the `RECORDING_KEY` variable in `listener.py`.
-
-You can use use the `find_key` script to find the code of the key you want to use. Just run:
-
-```shell
-python find_key.py
-```
-
-And press the key you want to use. The code will be printed in the terminal.
+### Mac
+You will need to authorize your terminal to use the microphone and keyboard. Go to System Settings > Privacy and Security. Then: 
+* Select Microphone and authorize your terminal.
+* Select Accessibility and authorize your terminal.
 
 ## Security risks
 
