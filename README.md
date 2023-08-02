@@ -58,6 +58,10 @@ You will need to authorize your terminal to use the microphone and keyboard. Go 
 * Select Microphone and authorize your terminal.
 * Select Accessibility and authorize your terminal.
 
+Restart the terminal for the changes to take effect. 
+
+Note that this might entail security risks.
+
 ## Security risks
 
 The Whisper API response will be automatically streamed to your keyboard and executed there. This might entail security risks. Use at your own risk. 
