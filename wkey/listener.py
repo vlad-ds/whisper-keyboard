@@ -7,8 +7,8 @@ import openai
 from pynput.keyboard import Controller as KeyboardController, Key, Listener
 from scipy.io import wavfile
 
-from oa import apply_whisper
-from process import process_transcript
+from wkey.oa import apply_whisper
+from wkey.process import process_transcript
 
 load_dotenv()
 key_label = os.environ.get("RECORD_KEY", "ctrl_r")
@@ -25,6 +25,7 @@ sample_rate = 16000
 
 # Keyboard controller
 keyboard_controller = KeyboardController()
+
 
 def on_press(key):
     global recording
@@ -70,9 +71,13 @@ def callback(indata, frames, time, status):
     if recording:
         audio_data.append(indata.copy())  # make sure to copy the indata
 
+def main():
+    with Listener(on_press=on_press, on_release=on_release) as listener:
+        # This is the stream callback
+        with sd.InputStream(callback=callback, channels=1, samplerate=sample_rate):
+            # Just keep the script running
+            listener.join()
 
-with Listener(on_press=on_press, on_release=on_release) as listener:
-    # This is the stream callback
-    with sd.InputStream(callback=callback, channels=1, samplerate=sample_rate):
-        # Just keep the script running
-        listener.join()
+if __name__ == "__main__":
+    main()
+
