@@ -12,7 +12,7 @@ with open('requirements.txt') as f:
     required = f.read().splitlines()
 
 setup(name='wkey',
-      version='0.1',
+      version='0.2',
       description='Integrate OpenAI speech-to-text Whisper with your keyboard',
       long_description=long_description,
       long_description_content_type='text/markdown',
