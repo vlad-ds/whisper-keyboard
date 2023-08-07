@@ -17,8 +17,9 @@ setup(name='wkey',
       author_email='vlad.datapro@gmail.com',
       license='MIT',
       packages=['wkey'],
-      scripts=['scripts/wkey'],
+      scripts=['scripts/wkey', 'scripts/fkey'],
       install_requires=required,
       include_package_data=True,
       zip_safe=False
       )
+ 

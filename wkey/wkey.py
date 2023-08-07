@@ -7,11 +7,11 @@ import openai
 from pynput.keyboard import Controller as KeyboardController, Key, Listener
 from scipy.io import wavfile
 
-from wkey.oa import apply_whisper
-from wkey.process import process_transcript
+from wkey.whisper import apply_whisper
+from wkey.utils import process_transcript
 
 load_dotenv()
-key_label = os.environ.get("RECORD_KEY", "ctrl_r")
+key_label = os.environ.get("WKEY", "ctrl_r")
 RECORD_KEY = Key[key_label]
 
 # This flag determines when to record
@@ -30,19 +30,19 @@ keyboard_controller = KeyboardController()
 def on_press(key):
     global recording
     global audio_data
-    # When the right shift key is pressed, start recording
+    
     if key == RECORD_KEY:
         recording = True
         audio_data = []
-        print("Recording started...")
+        print("Listening...")
 
 def on_release(key):
     global recording
     global audio_data
-    # When the right shift key is released, stop recording
+    
     if key == RECORD_KEY:
         recording = False
-        print("Recording stopped.")
+        print("Transcribing...")
         
         try:
             audio_data_np = np.concatenate(audio_data, axis=0)
@@ -72,6 +72,7 @@ def callback(indata, frames, time, status):
         audio_data.append(indata.copy())  # make sure to copy the indata
 
 def main():
+    print(f"wkey is active. Hold down {key_label} to start dictating.")
     with Listener(on_press=on_press, on_release=on_release) as listener:
         # This is the stream callback
         with sd.InputStream(callback=callback, channels=1, samplerate=sample_rate):
@@ -80,4 +81,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

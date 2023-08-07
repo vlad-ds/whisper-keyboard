@@ -1,5 +1,3 @@
 #!/usr/bin/env python3
-
-from wkey.listener import main
-
+from wkey.wkey import main
 main()
